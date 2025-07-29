@@ -43,5 +43,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Minikube') {
+            steps {
+                script {
+                    sh '''
+                        kubectl config use-context minikube
+                        kubectl set image deployment/my-app my-app=${DOCKER_IMAGE}:${BUILD_NUMBER} -n default || \
+                        kubectl apply -f k8s/
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment successful at $(date)"
+        }
+        failure {
+            echo "Deployment failed. Check logs."
+        }
     }
 }

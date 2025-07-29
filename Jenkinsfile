@@ -48,6 +48,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        export KUBECONFIG=/var/lib/jenkins/.kube/config
                         kubectl config use-context minikube
                         kubectl set image deployment/my-app my-app=${DOCKER_IMAGE}:${BUILD_NUMBER} -n default || \
                         kubectl apply -f k8s/

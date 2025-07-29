@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/supravat001/myip.git'
+                git branch:'main', url: 'https://github.com/supravat001/myip.git'
             }
         }
 

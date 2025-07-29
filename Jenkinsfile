@@ -21,17 +21,17 @@ pipeline {
         
         }
         stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'sdash', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_USER}:${DOCKER_PASS}") {
-                            dockerImage.push("latest")
-                        }
-                    }
-                }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'sdash', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            script {
+                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                dockerImage.push("latest")
             }
         }
     }
+}
+    }
+}
 
     post {
         success {
@@ -41,4 +41,4 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
-}
+

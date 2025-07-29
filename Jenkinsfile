@@ -16,7 +16,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${7205416852/myip}:latest")
+                    dockerImage = docker.build("${IMAGE_NAME}:latest")
+
                 }
             }
         }

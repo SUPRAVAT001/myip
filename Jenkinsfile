@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch:'main', url: 'https://github.com/supravat001/myip.git'
+                git branch: 'main', url: 'https://github.com/supravat001/myip.git'
             }
         }
 
@@ -18,21 +18,20 @@ pipeline {
                     dockerImage = docker.build("${IMAGE_NAME}:latest")
                 }
             }
-        
         }
+
         stage('Push Docker Image') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'sdash', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            script {
-                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                dockerImage.push("latest")
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'sdash', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                        dockerImage.push("latest")
+                    }
+                }
             }
         }
-    }
-}
-    }
-}
-stage('Deploy to Kubernetes') {
+
+        stage('Deploy to Kubernetes') {
             steps {
                 script {
                     sh '''
@@ -44,14 +43,5 @@ stage('Deploy to Kubernetes') {
                 }
             }
         }
-    
-
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed.'
-        }
     }
-
+}

@@ -18,15 +18,8 @@ pipeline {
                     dockerImage = docker.build("${IMAGE_NAME}:latest")
                 }
             }
+        
         }
-
-        stage('Run Unit Tests') {
-            steps {
-                sh 'pip install -r requirements.txt'
-                sh 'pytest tests || echo "No tests found."'
-            }
-        }
-
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: '7205416852', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {

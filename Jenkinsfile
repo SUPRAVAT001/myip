@@ -59,7 +59,7 @@ pipeline {
 
     post {
         success {
-            echo "Deployment successful at $(date)"
+            echo "Deployment successful"
         }
         failure {
             echo "Deployment failed. Check logs."

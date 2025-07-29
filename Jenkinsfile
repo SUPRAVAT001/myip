@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         IMAGE_NAME = "7205416852/myip"
-        DOCKER_CREDS = credentials('7205416852')  // ID of Docker Hub credentials in Jenkins
     }
 
     stages {
@@ -17,7 +16,6 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("${IMAGE_NAME}:latest")
-
                 }
             }
         }
@@ -31,9 +29,11 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', '7205416852') {
-                        dockerImage.push("latest")
+                withCredentials([usernamePassword(credentialsId: '7205416852', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_USER}:${DOCKER_PASS}") {
+                            dockerImage.push("latest")
+                        }
                     }
                 }
             }
